@@ -1,0 +1,56 @@
+# ── Python ─────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Virtual environments ────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# ── Django ──────────────────────────────────────────────────────────────────
+*.log
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+static_root/
+
+# ── Environment & secrets  ──────────────────────────────────────────────────
+# NEVER commit .env — it contains SECRET_KEY and database passwords
+.env
+.env.local
+.env.*.local
+
+# ── Testing & coverage ──────────────────────────────────────────────────────
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+.tox/
+
+# ── IDEs ────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Node (if any frontend tooling is added later) ───────────────────────────
+node_modules/
+npm-debug.log*
+
+# ── Byte-compiled / optimised / DLL files ───────────────────────────────────
+**/*.pyc

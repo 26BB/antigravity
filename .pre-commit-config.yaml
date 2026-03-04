@@ -1,0 +1,36 @@
+# .pre-commit-config.yaml
+# ─────────────────────────────────────────────────────────────────────────────
+# Runs automatically on every `git commit`.
+# Install hooks once with:  pre-commit install
+# Run manually on all files: pre-commit run --all-files
+# ─────────────────────────────────────────────────────────────────────────────
+
+repos:
+  # ── Basic hygiene ──────────────────────────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+      - id: detect-private-key        # Blocks commits containing private keys
+
+  # ── Secret scanning ────────────────────────────────────────────────────────
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        # Add --baseline .secrets.baseline to allow reviewed secrets
+        args: ['--baseline', '.secrets.baseline']
+
+  # ── Python security linting ────────────────────────────────────────────────
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.10
+    hooks:
+      - id: bandit
+        args: ['-ll', '--recursive', 'antigravity/']
+        # -ll = flag medium severity and above (not just high)

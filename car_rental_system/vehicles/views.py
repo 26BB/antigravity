@@ -26,7 +26,7 @@ def vehicle_list(request):
 def manage_availability(request, vehicle_id):
     vehicle = get_object_or_404(Vehicle, id=vehicle_id, owner=request.user)
     availabilities = vehicle.availabilities.all()
-    
+
     if request.method == 'POST':
         form = AvailabilityForm(request.POST)
         if form.is_valid():
@@ -36,7 +36,7 @@ def manage_availability(request, vehicle_id):
             return redirect('vehicles:manage_availability', vehicle_id=vehicle.id)
     else:
         form = AvailabilityForm()
-        
+
     return render(request, 'vehicles/availability.html', {
         'vehicle': vehicle,
         'form': form,

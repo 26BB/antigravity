@@ -21,7 +21,7 @@ class DashboardRoutingTest(TestCase):
         response = self.client.get(reverse('dashboard'))
         self.assertTemplateUsed(response, 'dashboard/owner.html')
         self.client.logout()
-        
+
         # Driver
         self.client.login(username='driver1', password='pw')
         response = self.client.get(reverse('dashboard'))

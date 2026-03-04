@@ -24,7 +24,7 @@ class AccountsViewTest(TestCase):
         response = self.client.get(reverse('accounts:register'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'accounts/register.html')
-        
+
     def test_login_view(self):
         response = self.client.get(reverse('accounts:login'))
         self.assertEqual(response.status_code, 200)

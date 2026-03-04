@@ -23,7 +23,7 @@ def render_owner_dashboard(request):
     # Get bookings for vehicles owned by this user
     pending_bookings = Booking.objects.filter(vehicle__owner=request.user, status='requested')
     active_bookings = Booking.objects.filter(vehicle__owner=request.user, status='active')
-    
+
     return render(request, 'dashboard/owner.html', {
         'vehicles': vehicles,
         'pending_bookings': pending_bookings,
@@ -42,15 +42,15 @@ def render_admin_dashboard(request):
     total_vehicles = Vehicle.objects.count()
     total_users = User.objects.count()
     active_rentals = Booking.objects.filter(status='active').count()
-    
+
     # Calculate Total Revenue
     completed_trips = TripLog.objects.all()
     total_revenue = sum(trip.total_cost for trip in completed_trips)
-    
+
     # Recent Activity Feed
     recent_bookings = Booking.objects.all().order_by('-requested_at')[:5]
     recent_completed = TripLog.objects.all().order_by('-logged_at')[:5]
-    
+
     return render(request, 'dashboard/admin.html', {
         'total_vehicles': total_vehicles,
         'total_users': total_users,

@@ -6,18 +6,20 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8080
 
-# Set working directory
+# Working directory
 WORKDIR /app
 
-# Install dependencies from repo root
+# Copy requirements and install
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy only the Django project files (car_rental_system/) into /app
+# Copy everything from car_rental_system into /app
+# This puts manage.py, config/, accounts/, etc at /app/
 COPY car_rental_system/ /app/
 
-# Collect static files (manage.py is now at /app/manage.py)
+# Collect static files
 RUN python manage.py collectstatic --noinput
 
-# Run gunicorn
-CMD exec gunicorn --bind 0.0.0.0:$PORT --workers 2 --threads 8 --timeout 0 config.wsgi:application
+# Migrate database and start Gunicorn
+# Using sh -c to allow multiple commands
+CMD sh -c "python manage.py migrate --noinput && exec gunicorn --bind 0.0.0.0:$PORT --workers 2 --threads 8 --timeout 0 config.wsgi:application"

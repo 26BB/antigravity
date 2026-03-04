@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %} - Log Trip{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <div
+            style="width: 64px; height: 64px; background: rgba(16, 185, 129, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: var(--success);">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+        </div>
+        <h2>Complete Your Trip</h2>
+        <p style="color: var(--gray-700);">You rented the <strong>{{ booking.vehicle.make }} {{ booking.vehicle.model
+                }}</strong> starting on {{ booking.start_time|date:"M d, H:i" }}</p>
+    </div>
+
+    <div class="card" style="border-top: 4px solid var(--success);">
+        <h3 style="margin-bottom: 1.5rem;">Trip Documentation</h3>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                <small style="color: var(--gray-700); font-size: 0.8rem; display: block; margin-top: 0.25rem;">{{
+                    field.help_text|safe }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                <div style="color: var(--danger); font-size: 0.85rem; margin-top: 0.25rem;">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-success"
+                style="width: 100%; padding: 1rem; font-size: 1.1rem; margin-top: 1rem;">Submit Odometer & End
+                Rental</button>
+        </form>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{% url 'dashboard' %}" style="color: var(--gray-700); text-decoration: none; font-weight: 500;">&larr;
+            Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

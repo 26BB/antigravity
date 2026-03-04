@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %} - Find a Vehicle{% endblock %}
+
+{% block content %}
+<div class="flex-between" style="margin-bottom: 2rem; border-bottom: 1px solid var(--gray-300); padding-bottom: 1rem;">
+    <div>
+        <h2 style="margin-bottom: 0.25rem;">Browse Fleet</h2>
+        <p style="margin: 0; color: var(--gray-700);">Find the perfect car for your next trip</p>
+    </div>
+</div>
+
+<form method="get" class="card"
+    style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items: end; margin-bottom: 2rem; background: var(--light);">
+    <div class="form-group" style="margin-bottom: 0;">
+        <label>Trip Start</label>
+        <input type="datetime-local" name="start" value="{{ request.GET.start }}" required>
+    </div>
+    <div class="form-group" style="margin-bottom: 0;">
+        <label>Trip End</label>
+        <input type="datetime-local" name="end" value="{{ request.GET.end }}" required>
+    </div>
+    <button type="submit" class="btn btn-success" style="height: 48px;">Search Availability</button>
+</form>
+
+{% if vehicles %}
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+    {% for vehicle in vehicles %}
+    <div class="card" style="display: flex; flex-direction: column;">
+        <div style="flex-grow: 1;">
+            <div class="flex-between" style="margin-bottom: 1rem;">
+                <h3 style="margin: 0; font-size: 1.35rem; color: var(--primary);">{{ vehicle.make }} {{ vehicle.model }}
+                </h3>
+                <span class="badge badge-active">Available</span>
+            </div>
+
+            <div style="margin-bottom: 1.5rem; font-size: 0.95rem; color: var(--gray-700);">
+                <div style="margin-bottom: 0.5rem;"><strong>License:</strong> {{ vehicle.license_plate }}</div>
+                <div style="margin-bottom: 0.5rem;"><strong>Year:</strong> {{ vehicle.year }}</div>
+                <div><strong>Owner:</strong> {{ vehicle.owner.get_full_name }}</div>
+            </div>
+        </div>
+
+        <a href="{% url 'rentals:book' vehicle.id %}" class="btn btn-success"
+            style="width: 100%; text-align: center; border-radius: 8px;">Request Booking</a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div
+    style="padding: 4rem; text-align: center; background: white; border-radius: var(--radius-lg); border: 2px dashed var(--gray-300);">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+    <h3 style="margin-bottom: 0.5rem;">No Vehicles Available</h3>
+    <p style="color: var(--gray-700);">There are currently no active vehicles registered by owners on the platform.</p>
+</div>
+{% endif %}
+
+<div style="margin-top: 2rem;">
+    <a href="{% url 'dashboard' %}" style="color: var(--primary); text-decoration: none; font-weight: 500;">&larr; Back
+        to Dashboard</a>
+</div>
+{% endblock %}

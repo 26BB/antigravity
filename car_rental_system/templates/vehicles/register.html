@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %} - Register Vehicle{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div style="margin-bottom: 2rem;">
+        <h2 style="margin-bottom: 0.25rem;">Add to Fleet Share</h2>
+        <p style="margin: 0; color: var(--gray-700);">Register your personal vehicle to earn income while it's parked.
+        </p>
+    </div>
+
+    <div class="card" style="border-top: 4px solid var(--primary); padding: 2.5rem;">
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                <small style="color: var(--gray-700); font-size: 0.8rem; display: block; margin-top: 0.25rem;">{{
+                    field.help_text|safe }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                <div style="color: var(--danger); font-size: 0.85rem; margin-top: 0.25rem;">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-success"
+                style="width: 100%; margin-top: 1rem; font-size: 1.1rem; padding: 1rem;">Register Vehicle</button>
+        </form>
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <a href="{% url 'vehicles:list' %}"
+            style="color: var(--primary); text-decoration: none; font-weight: 500;">&larr; Cancel and return to My
+            Vehicles</a>
+    </div>
+</div>
+{% endblock %}

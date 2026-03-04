@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %} - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="flex-between" style="margin-bottom: 2rem; border-bottom: 1px solid var(--gray-300); padding-bottom: 1rem;">
+    <div>
+        <h2 style="margin-bottom: 0.25rem;">System Overview</h2>
+        <p style="margin: 0; color: var(--gray-700);">Welcome back, Administrator. Here's what's happening today.</p>
+    </div>
+</div>
+
+<!-- KPI Metrics Grid -->
+<div
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+
+    <div class="card" style="border-top: 4px solid var(--primary); text-align: center;">
+        <h3
+            style="font-size: 1rem; color: var(--gray-700); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            Total Revenue</h3>
+        <p style="font-size: 2.5rem; font-weight: 700; color: var(--primary); margin: 0;">${{ total_revenue }}</p>
+    </div>
+
+    <div class="card" style="border-top: 4px solid var(--success); text-align: center;">
+        <h3
+            style="font-size: 1rem; color: var(--gray-700); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            Active Rentals</h3>
+        <p style="font-size: 2.5rem; font-weight: 700; color: var(--success); margin: 0;">{{ active_rentals }}</p>
+    </div>
+
+    <div class="card" style="border-top: 4px solid #f59e0b; text-align: center;">
+        <h3
+            style="font-size: 1rem; color: var(--gray-700); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            Total Users</h3>
+        <p style="font-size: 2.5rem; font-weight: 700; color: #f59e0b; margin: 0;">{{ total_users }}</p>
+    </div>
+
+    <div class="card" style="border-top: 4px solid #8b5cf6; text-align: center;">
+        <h3
+            style="font-size: 1rem; color: var(--gray-700); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            Fleet Size</h3>
+        <p style="font-size: 2.5rem; font-weight: 700; color: #8b5cf6; margin: 0;">{{ total_vehicles }}</p>
+    </div>
+
+</div>
+
+<!-- Recent Activity Feeds -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+
+    <!-- Recent Bookings -->
+    <div class="card" style="margin: 0;">
+        <h3 style="margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--gray-300);">Recent
+            Booking Requests</h3>
+        {% if recent_bookings %}
+        <ul style="list-style: none; padding: 0; margin: 0;">
+            {% for booking in recent_bookings %}
+            <li
+                style="padding: 1rem 0; border-bottom: 1px dashed var(--gray-300); display: flex; justify-content: space-between; align-items: start;">
+                <div>
+                    <strong>{{ booking.driver.get_full_name }}</strong> requested <strong>{{ booking.vehicle.make }} {{
+                        booking.vehicle.model }}</strong>
+                    <div style="font-size: 0.85rem; color: var(--gray-700); margin-top: 0.25rem;">
+                        Requested: {{ booking.requested_at|date:"M d, H:i" }}
+                    </div>
+                </div>
+                <span
+                    class="badge {% if booking.status == 'approved' %}badge-active{% elif booking.status == 'cancelled' %}badge-danger{% else %}badge-pending{% endif %}">
+                    {{ booking.get_status_display }}
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p style="color: var(--gray-700); text-align: center; padding: 2rem 0;">No recent booking activity.</p>
+        {% endif %}
+    </div>
+
+    <!-- Completed Trips -->
+    <div class="card" style="margin: 0;">
+        <h3 style="margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--gray-300);">Recently
+            Completed Trips</h3>
+        {% if recent_completed %}
+        <ul style="list-style: none; padding: 0; margin: 0;">
+            {% for log in recent_completed %}
+            <li
+                style="padding: 1rem 0; border-bottom: 1px dashed var(--gray-300); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>{{ log.booking.driver.get_full_name }}</strong> &rarr; <strong>{{ log.booking.vehicle.make
+                        }} {{ log.booking.vehicle.model }}</strong>
+                    <div style="font-size: 0.85rem; color: var(--gray-700); margin-top: 0.25rem;">
+                        Distance: {{ log.distance_driven }} km
+                    </div>
+                </div>
+                <span style="font-weight: 700; color: var(--success);">
+                    +${{ log.total_cost }}
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p style="color: var(--gray-700); text-align: center; padding: 2rem 0;">No recently completed trips.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

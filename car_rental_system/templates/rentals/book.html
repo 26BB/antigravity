@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %} - Request Booking{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div style="margin-bottom: 2rem;">
+        <h2 style="margin-bottom: 0.25rem;">Request to Book</h2>
+        <p style="margin: 0; color: var(--gray-700);">You are requesting the <strong>{{ vehicle.make }} {{ vehicle.model
+                }}</strong> owned by {{ vehicle.owner.get_full_name }}</p>
+    </div>
+
+    <div class="card"
+        style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(79, 70, 229, 0.1) 100%); border-color: rgba(79, 70, 229, 0.2);">
+        <h3 style="display: flex; align-items: center; gap: 0.5rem; color: var(--primary);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            Rental Policy & Rates
+        </h3>
+        {% if policy %}
+        <div style="margin-top: 1rem;">
+            <p style="font-weight: 500; font-size: 1.1rem; margin-bottom: 0.5rem;">{{ policy.title }}</p>
+            <p style="color: var(--gray-700); margin-bottom: 1rem;">{{ policy.description }}</p>
+            <div style="display: flex; gap: 1rem;">
+                <span class="badge"
+                    style="background: white; border: 1px solid var(--primary); color: var(--primary); font-size: 0.9rem;">Hourly:
+                    ${{ policy.hourly_rate }}</span>
+                <span class="badge"
+                    style="background: white; border: 1px solid var(--primary); color: var(--primary); font-size: 0.9rem;">Per
+                    KM: ${{ policy.per_km_rate }}</span>
+            </div>
+        </div>
+        {% else %}
+        <div
+            style="margin-top: 1rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--danger); color: #991b1b;">
+            <strong>Error:</strong> No active rental policy found. The company must set a policy before bookings can be
+            finalized.
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="card" style="border-top: 4px solid var(--primary);">
+        <h3 style="margin-bottom: 1.5rem;">Booking Details</h3>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                <small style="color: var(--gray-700); font-size: 0.8rem; display: block; margin-top: 0.25rem;">{{
+                    field.help_text|safe }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                <div style="color: var(--danger); font-size: 0.85rem; margin-top: 0.25rem;">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-success"
+                style="width: 100%; margin-top: 1rem; padding: 1rem; font-size: 1.1rem;" {% if not policy %}disabled{%
+                endif %}>Submit Request to Owner</button>
+        </form>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{% url 'rentals:search' %}"
+            style="color: var(--gray-700); text-decoration: none; font-weight: 500;">&larr; Cancel and go back</a>
+    </div>
+</div>
+{% endblock %}

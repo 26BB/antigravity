@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} - Register{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 0 auto;">
+    <h2 style="text-align: center; margin-bottom: 2rem;">Join Fleet Share</h2>
+    <div class="card"
+        style="padding: 2.5rem; background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                <small style="color: var(--gray-700); font-size: 0.8rem; display: block; margin-top: 0.25rem;">{{
+                    field.help_text|safe }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                <div style="color: var(--danger); font-size: 0.85rem; margin-top: 0.25rem;">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-success"
+                style="width: 100%; margin-top: 1rem; font-size: 1.1rem; padding: 1rem;">Create Account</button>
+        </form>
+    </div>
+    <p style="text-align: center; margin-top: 1.5rem;">Already have an account? <a href="{% url 'accounts:login' %}"
+            style="color: var(--primary); font-weight: 500; text-decoration: none;">Log in here &rarr;</a></p>
+</div>
+{% endblock %}

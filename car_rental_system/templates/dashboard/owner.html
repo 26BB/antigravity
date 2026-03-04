@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %} - Owner Dashboard{% endblock %}
+
+{% block content %}
+<div class="flex-between" style="margin-bottom: 2rem;">
+    <div>
+        <h2 style="margin-bottom: 0.25rem;">Owner Dashboard</h2>
+        <p style="margin: 0; color: var(--gray-700);">Manage your cars and requests</p>
+    </div>
+    <a href="{% url 'vehicles:list' %}" class="btn btn-outline">My Fleet</a>
+</div>
+
+{% if pending_bookings %}
+<div class="card" style="border-left: 4px solid var(--warning);">
+    <h3 style="display: flex; align-items: center; gap: 0.5rem; color: #b45309;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        Pending Requests ({{ pending_bookings|length }})
+    </h3>
+
+    <div style="display: grid; gap: 1rem; margin-top: 1rem;">
+        {% for booking in pending_bookings %}
+        <div
+            style="background: var(--light); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong style="font-size: 1.1rem; display: block; margin-bottom: 0.25rem;">{{ booking.vehicle.make }} {{
+                    booking.vehicle.model }}</strong>
+                <span style="color: var(--gray-700); font-size: 0.9rem;">Requested by <strong>{{
+                        booking.driver.get_full_name }}</strong></span>
+                <div
+                    style="margin-top: 0.5rem; font-size: 0.85rem; background: white; padding: 0.5rem; border-radius: 4px; border: 1px dashed var(--gray-300);">
+                    <div>⏱️ {{ booking.start_time|date:"M d, H:i" }} &rarr; {{ booking.end_time|date:"M d, H:i" }}</div>
+                    <div style="margin-top: 0.25rem; font-style: italic;">"{{ booking.purpose }}"</div>
+                </div>
+            </div>
+
+            <form method="post" action="{% url 'rentals:approve_booking' booking.id %}"
+                style="display: flex; flex-direction: column; gap: 0.5rem;">
+                {% csrf_token %}
+                <button type="submit" name="action" value="approve" class="btn btn-success"
+                    style="padding: 0.5rem 1rem;">Approve</button>
+                <button type="submit" name="action" value="deny" class="btn btn-outline"
+                    style="border-color: var(--danger); color: var(--danger) !important; padding: 0.5rem 1rem;">Deny</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="card" style="padding: 0; overflow: hidden;">
+    <div style="padding: 1.5rem; border-bottom: 1px solid var(--gray-100); background: var(--gray-100);">
+        <h3 style="margin: 0; font-size: 1.1rem;">Active & Approved Bookings</h3>
+    </div>
+    {% if active_bookings %}
+    <div style="overflow-x: auto;">
+        <table style="margin: 0; border: none; border-radius: 0;">
+            <tbody>
+                {% for booking in active_bookings %}
+                <tr>
+                    <td>
+                        <strong>{{ booking.vehicle.license_plate }}</strong><br>
+                        <span style="font-size: 0.85rem; color: var(--gray-700);">{{ booking.vehicle.make }} {{
+                            booking.vehicle.model }}</span>
+                    </td>
+                    <td>Rented by <strong>{{ booking.driver.get_full_name }}</strong></td>
+                    <td style="text-align: right;"><span class="badge badge-active">{{ booking.get_status_display
+                            }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="padding: 2rem 1.5rem; text-align: center; color: var(--gray-700);">
+        <p>None of your vehicles are currently rented out.</p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

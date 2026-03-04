@@ -1,0 +1,22 @@
+Creating test database for alias 'default'...
+....E...
+======================================================================
+ERROR: test_routing (config.tests.DashboardRoutingTest.test_routing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\django\car_rental_system\config\tests.py", line 15, in test_routing
+    response = self.client.get(reverse('home'))
+                               ~~~~~~~^^^^^^^^
+  File "C:\Users\Bhushan bhosale\AppData\Roaming\Python\Python314\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\Bhushan bhosale\AppData\Roaming\Python\Python314\site-packages\django\urls\resolvers.py", line 842, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'home' not found. 'home' is not a valid view function or pattern name.
+
+----------------------------------------------------------------------
+Ran 8 tests in 12.624s
+
+FAILED (errors=1)
+Destroying test database for alias 'default'...
+Found 8 test(s).
+System check identified no issues (0 silenced).

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %} - My Vehicles{% endblock %}
+
+{% block content %}
+<div class="flex-between" style="margin-bottom: 2rem;">
+    <div>
+        <h2 style="margin-bottom: 0.25rem;">My Vehicles</h2>
+        <p style="margin: 0; color: var(--gray-700);">Manage your registered ﬂeet</p>
+    </div>
+    <a href="{% url 'vehicles:register' %}" class="btn btn-success">+ Register New Vehicle</a>
+</div>
+
+{% if vehicles %}
+<div style="display: grid; gap: 1.5rem;">
+    {% for vehicle in vehicles %}
+    <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <div
+                style="width: 50px; height: 50px; background: var(--gray-100); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--gray-700);">
+                🚗
+            </div>
+            <div>
+                <h3 style="margin: 0; font-size: 1.25rem;">{{ vehicle.make }} {{ vehicle.model }} <span
+                        style="font-weight: 400; color: var(--gray-700);">({{ vehicle.year }})</span></h3>
+                <div style="display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.9rem; color: var(--gray-700);">
+                    <span><strong style="color: var(--dark);">Plate:</strong> {{ vehicle.license_plate }}</span>
+                    <span>&bull;</span>
+                    <span><strong style="color: var(--dark);">Status:</strong> <span
+                            class="badge {% if vehicle.status == 'active' %}badge-active{% else %}badge-inactive{% endif %}">{{
+                            vehicle.get_status_display }}</span></span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <a href="{% url 'vehicles:manage_availability' vehicle.id %}" class="btn btn-outline">Schedule &rarr;</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div
+    style="padding: 4rem; text-align: center; background: white; border-radius: var(--radius-lg); border: 2px dashed var(--gray-300);">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">🚙</div>
+    <h3 style="margin-bottom: 0.5rem;">No Vehicles Registered</h3>
+    <p style="color: var(--gray-700); margin-bottom: 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto;">
+        Add your personal car to the platform and start earning when it's idle.</p>
+    <a href="{% url 'vehicles:register' %}" class="btn btn-success">Register Your First Vehicle</a>
+</div>
+{% endif %}
+
+<div style="margin-top: 2rem;">
+    <a href="{% url 'dashboard' %}" style="color: var(--primary); text-decoration: none; font-weight: 500;">&larr; Back
+        to Dashboard</a>
+</div>
+{% endblock %}

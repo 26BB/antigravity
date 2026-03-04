@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Car Rentals {% block title %}{% endblock %}</title>
+    <!-- Premium Modern Styling -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div><strong>AntiGravity Fleet Share</strong></div>
+        <div>
+            {% if user.is_authenticated %}
+            <span>Hello, {{ user.get_full_name|default:user.username }} ({{ user.get_role_display }})</span>
+            <!-- Links will go here -->
+            <a href="{% url 'vehicles:list' %}">My Vehicles</a>
+            <a href="{% url 'rentals:search' %}">Book a Car</a>
+            {% else %}
+            <a href="#">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+
+</html>

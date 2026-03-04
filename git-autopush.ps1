@@ -1,40 +1,33 @@
 # git-autopush.ps1
-# ─────────────────────────────────────────────────────────────────────────────
-# Run this from c:\django to instantly commit all changes and push to GitHub.
-# Usage:  .\git-autopush.ps1
-#         .\git-autopush.ps1 "Optional custom commit message"
-# ─────────────────────────────────────────────────────────────────────────────
-
 param(
     [string]$Message = ""
 )
 
-$timestamp = Get-Date -Format "yyyy-MM-dd HH:mm"
-
-if ($Message -eq "") {
-    $commitMsg = "Auto-push: $timestamp"
-} else {
-    $commitMsg = "$Message ($timestamp)"
+$date = Get-Date -Format "yyyy-MM-dd HH:mm"
+if ([string]::IsNullOrWhiteSpace($Message)) {
+    $commitMsg = "Auto-push: $date"
+}
+else {
+    $commitMsg = "$Message ($date)"
 }
 
-Write-Host "`n🔍 Checking for changes..." -ForegroundColor Cyan
-
+Write-Host "🔍 Checking for changes..."
 git add .
-
 $status = git status --porcelain
 if (-not $status) {
-    Write-Host "✅ Nothing to commit — working tree is clean." -ForegroundColor Green
+    Write-Host "✅ No changes to push."
     exit 0
 }
 
-Write-Host "📦 Committing: $commitMsg" -ForegroundColor Yellow
-git commit -m $commitMsg
+Write-Host "📦 Committing: $commitMsg"
+git commit -m "$commitMsg"
 
-Write-Host "🚀 Pushing to GitHub..." -ForegroundColor Cyan
+Write-Host "🚀 Pushing..."
 git push
 
 if ($LASTEXITCODE -eq 0) {
-    Write-Host "✅ Pushed successfully to GitHub!" -ForegroundColor Green
-} else {
-    Write-Host "❌ Push failed. Check your connection or token." -ForegroundColor Red
+    Write-Host "✅ Success!"
+}
+else {
+    Write-Host "❌ Failed."
 }
